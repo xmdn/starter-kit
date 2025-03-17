@@ -1,4 +1,32 @@
-# vue
+# Laravel
+
+Because our repository doesn't have any ./vendor files (libs).
+Run this command before continue, to generate it:
+
+```sh
+composer install
+```
+
+For application we need encryption key.
+We should run this command to generate it:
+
+```sh
+php artisan key:generate
+```
+
+Now we can run Laravel Sail commands to build:
+
+```sh
+sail build
+```
+
+And command to build project (option -d we need for detached mode, for running in background):
+
+```sh
+sail up -d
+```
+
+# Vue
 
 This template should help get you started developing with Vue 3 in Vite.
 
