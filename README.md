@@ -30,6 +30,10 @@ sail up -d
 login: root@mail.com
 Password: Rfd#4543Fdd
 
+# Default User data
+login: john_doe@mail.com
+Password: Rfd#4543Fdd
+
 
 # Vue
 
