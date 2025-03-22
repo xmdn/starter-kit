@@ -26,6 +26,11 @@ And command to build project (option -d we need for detached mode, for running i
 sail up -d
 ```
 
+# Root User data
+login: root@mail.com
+Password: Rfd#4543Fdd
+
+
 # Vue
 
 This template should help get you started developing with Vue 3 in Vite.
