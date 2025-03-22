@@ -2,6 +2,8 @@
 
 return [
 
+    'asset_url' => env('APP_URL', null),
+
     /*
     |--------------------------------------------------------------------------
     | Application Name
@@ -104,6 +106,22 @@ return [
             explode(',', env('APP_PREVIOUS_KEYS', ''))
         ),
     ],
+
+    // 'providers' => [
+    //     /*
+    //     * Laravel Framework Service Providers...
+    //     */
+    //     Illuminate\Auth\AuthServiceProvider::class,
+    //     Illuminate\Broadcasting\BroadcastServiceProvider::class,
+    //     // Illuminate\Bus\BusServiceProvider::class,
+    //     // ...
+
+    //     /*
+    //     * Application Service Providers...
+    //     */
+    //     App\Providers\RouteServiceProvider::class, // Ensure this line exists
+    //     // ...
+    // ],
 
     /*
     |--------------------------------------------------------------------------

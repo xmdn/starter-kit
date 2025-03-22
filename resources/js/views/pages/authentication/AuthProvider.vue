@@ -1,7 +1,9 @@
 <script setup>
+import { useAuthStore } from '@/utils/auth'
 import { useTheme } from 'vuetify'
 
 const { global } = useTheme()
+const authStore = useAuthStore()
 
 const authProviders = [
   {
@@ -36,6 +38,7 @@ const authProviders = [
       variant="text"
       size="small"
       :color="global.name.value === 'dark' ? link.colorInDark : link.color"
+      @click="authStore.handleOAuthLogin(link.name)"
     >
       <VIcon
         size="20"

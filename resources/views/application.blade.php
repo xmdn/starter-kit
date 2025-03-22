@@ -8,6 +8,7 @@
   <title>Sneat - Vuetify Vuejs Admin Template</title>
   <link rel="stylesheet" type="text/css" href="{{ asset('loader.css') }}" />
   @vite(['resources/js/main.js'])
+  <!-- <meta name="csrf-token" content="{{ csrf_token() }}"> -->
 </head>
 
 <body>

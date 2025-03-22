@@ -51,7 +51,12 @@ return [
     */
 
     'channels' => [
-
+        
+        'redis' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/redis.log'),
+            'level' => 'debug',
+        ],
         'stack' => [
             'driver' => 'stack',
             'channels' => explode(',', env('LOG_STACK', 'single')),

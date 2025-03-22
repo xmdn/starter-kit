@@ -38,6 +38,7 @@ watch([
     :is="configStore.appContentLayoutNav === AppContentLayoutNav.Vertical ? DefaultLayoutWithVerticalNav : DefaultLayoutWithHorizontalNav"
   >
     <AppLoadingIndicator ref="refLoadingIndicator" />
+    IT"S DEFAULT!!!
 
     <RouterView v-slot="{ Component }">
       <Suspense

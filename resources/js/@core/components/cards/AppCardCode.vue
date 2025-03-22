@@ -1,6 +1,6 @@
 <script setup>
-import { getSingletonHighlighter } from 'shiki'
-import { PerfectScrollbar } from 'vue3-perfect-scrollbar'
+import { getSingletonHighlighter } from 'shiki';
+import { PerfectScrollbar } from 'vue3-perfect-scrollbar';
 
 const props = defineProps({
   title: {
@@ -28,6 +28,8 @@ const preferredCodeLanguage = useCookie('preferredCodeLanguage', {
   maxAge: COOKIE_MAX_AGE_1_YEAR,
 })
 
+console.log('preferredCodeLanguage: ', props);
+
 const isCodeShown = ref(false)
 const { copy, copied } = useClipboard({ source: computed(() => props.code[preferredCodeLanguage.value]) })
 
@@ -39,10 +41,24 @@ const highlighter = await getSingletonHighlighter({
   langs: ['vue'],
 })
 
-const codeSnippet = highlighter.codeToHtml(props.code[preferredCodeLanguage.value], {
+const codeSnippet = ref(highlighter.codeToHtml(props.code[preferredCodeLanguage.value], {
   lang: 'vue',
   theme: 'dracula',
-})
+}));
+
+watchEffect(() => {
+  console.log('WATCH PROPS: ', props.code, props.title, props.code[preferredCodeLanguage.value]);
+  // Only access code if it's available
+  if (props.code && props.code[preferredCodeLanguage.value]) {
+    // If code exists, process it
+    codeSnippet.value = highlighter.codeToHtml(props.code[preferredCodeLanguage.value], {
+      lang: preferredCodeLanguage.value,
+      theme: 'dracula',
+    });
+  } else {
+    codeSnippet.value = 'js'; // Fallback if no valid code is provided
+  }
+});
 </script>
 
 <template>
@@ -111,7 +127,7 @@ const codeSnippet = highlighter.codeToHtml(props.code[preferredCodeLanguage.valu
 
           <div class="position-relative">
             <PerfectScrollbar
-              style="border-radius: 6px; max-block-size: 500px"
+              style="border-radius: 6px; max-block-size: 500px;"
               :options="{ wheelPropagation: false, suppressScrollX: false }"
             >
               <!-- eslint-disable-next-line vue/no-v-html -->
@@ -143,8 +159,7 @@ const codeSnippet = highlighter.codeToHtml(props.code[preferredCodeLanguage.valu
 
 code[class*="language-"],
 pre[class*="language-"] {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
-    "Liberation Mono", "Courier New", monospace;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 14px;
 }
 

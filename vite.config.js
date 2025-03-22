@@ -1,21 +1,31 @@
-import laravel from 'laravel-vite-plugin'
-import { fileURLToPath } from 'node:url'
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
+import laravel from 'laravel-vite-plugin'
+import { fileURLToPath } from 'node:url'
 import AutoImport from 'unplugin-auto-import/vite'
 import Components from 'unplugin-vue-components/vite'
 import { VueRouterAutoImports, getPascalCaseRouteName } from 'unplugin-vue-router'
 import VueRouter from 'unplugin-vue-router/vite'
 import { defineConfig } from 'vite'
-import VueDevTools from 'vite-plugin-vue-devtools'
 import Layouts from 'vite-plugin-vue-layouts'
 import vuetify from 'vite-plugin-vuetify'
 import svgLoader from 'vite-svg-loader'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [// Docs: https://github.com/posva/unplugin-vue-router
-  // ℹ️ This plugin should be placed before vue plugin
+  base: './', // Ensure Vite does not assume /build/ as base
+  server: {
+    watch: {
+      usePolling: true, // Ensures file changes are detected in WSL
+      interval: 100, // Check for changes every 100ms
+    },
+    hmr: {
+      overlay: true, // Show errors in the browser console
+    },
+  },
+  plugins: [
+    // Docs: https://github.com/posva/unplugin-vue-router
+    // ℹ️ This plugin should be placed before vue plugin
     VueRouter({
       getRouteName: routeNode => {
       // Convert pascal case to kebab case
@@ -40,7 +50,7 @@ export default defineConfig({
     }),
     laravel({
       input: ['resources/js/main.js'],
-      refresh: true,
+      refresh: ['resources/js/**/*.vue', './resources/js/**/*.js', 'resources/js/**/**/*.vue'],
     }),
     vueJsx(), // Docs: https://github.com/vuetifyjs/vuetify-loader/tree/master/packages/vite-plugin
     vuetify({
@@ -99,11 +109,26 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 5000,
+    outDir: 'public/build', // Ensures assets go to the right location
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes('node_modules')) {
+            return 'vendor'; // Separate vendor code from app code
+          }
+        }
+      },
+    },
   },
   optimizeDeps: {
     exclude: ['vuetify'],
     entries: [
       './resources/js/**/*.vue',
+      './resources/js/**/**/*.vue',
+      './resources/js/**/*.js',
+      './resources/js/**/**/*.js',
     ],
+    include: ['vue', 'vue-router', 'pinia']
   },
+  
 })

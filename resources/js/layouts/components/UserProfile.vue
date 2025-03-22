@@ -1,5 +1,31 @@
 <script setup>
+import { useAuthStore } from '@/utils/auth' // Import the auth store
 import avatar1 from '@images/avatars/avatar-1.png'
+import { computed } from 'vue' // Import computed to make the store reactive
+import { redirect } from '../../plugins/1_router/index'
+
+
+// Access the auth store
+const authStore = useAuthStore()
+
+// Call initializeAuth to load user info from cookies
+onMounted(() => {
+  authStore.initializeAuth()
+})
+
+// Create a computed property to access user data
+const user = computed(() => authStore.user)
+const isAuthenticated = computed(() => authStore.isAuthenticated)
+
+// Call the handleLogout action when the logout button is clicked
+const handleLogout = () => {
+  authStore.handleLogout()
+}
+
+// Handle login redirection (only if not authenticated)
+const handleLoginRedirect = () => {
+  redirect('/login')
+}
 </script>
 
 <template>
@@ -48,15 +74,18 @@ import avatar1 from '@images/avatars/avatar-1.png'
             </template>
 
             <VListItemTitle class="font-weight-semibold">
-              John Doe
+              {{ isAuthenticated ? user?.name || 'No Name' : 'Not Loged' }}  <!-- Display user name if available -->
             </VListItemTitle>
-            <VListItemSubtitle>Admin</VListItemSubtitle>
+            <VListItemSubtitle>{{ isAuthenticated ? user?.role || 'No Role' : 'Not Loged' }}</VListItemSubtitle>
           </VListItem>
 
           <VDivider class="my-2" />
 
           <!-- 👉 Profile -->
-          <VListItem link>
+          <VListItem
+            v-if="isAuthenticated"
+            link
+          >
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -69,7 +98,10 @@ import avatar1 from '@images/avatars/avatar-1.png'
           </VListItem>
 
           <!-- 👉 Settings -->
-          <VListItem link>
+          <VListItem
+            v-if="isAuthenticated"
+            link
+          >
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -82,7 +114,10 @@ import avatar1 from '@images/avatars/avatar-1.png'
           </VListItem>
 
           <!-- 👉 Pricing -->
-          <VListItem link>
+          <VListItem
+            v-if="isAuthenticated"
+            link
+          >
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -110,8 +145,8 @@ import avatar1 from '@images/avatars/avatar-1.png'
           <!-- Divider -->
           <VDivider class="my-2" />
 
-          <!-- 👉 Logout -->
-          <VListItem to="/login">
+          <!-- 👉 Logout / Login -->
+          <VListItem @click="isAuthenticated ? handleLogout() : handleLoginRedirect()">
             <template #prepend>
               <VIcon
                 class="me-2"
@@ -120,7 +155,18 @@ import avatar1 from '@images/avatars/avatar-1.png'
               />
             </template>
 
-            <VListItemTitle>Logout</VListItemTitle>
+            <VListItemTitle>{{ isAuthenticated ? 'Logout' : 'Login' }}</VListItemTitle>
+          </VListItem>
+          <VListItem @click="!isAuthenticated ? handleLogout() : handleLoginRedirect()">
+            <template #prepend>
+              <VIcon
+                class="me-2"
+                icon="bx-log-out"
+                size="22"
+              />
+            </template>
+
+            <VListItemTitle>{{ !isAuthenticated ? 'Logout' : 'Login' }}</VListItemTitle>
           </VListItem>
         </VList>
       </VMenu>

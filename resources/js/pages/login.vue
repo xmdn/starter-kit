@@ -1,8 +1,11 @@
 <script setup>
+import { useAuthStore } from '@/utils/auth'
 import AuthProvider from '@/views/pages/authentication/AuthProvider.vue'
+import authV2LoginIllustration from '@images/pages/auth-v2-login-illustration.png'
 import { VNodeRenderer } from '@layouts/components/VNodeRenderer'
 import { themeConfig } from '@themeConfig'
-import authV2LoginIllustration from '@images/pages/auth-v2-login-illustration.png'
+
+const authStore = useAuthStore()
 
 definePage({
   meta: {
@@ -17,7 +20,7 @@ const form = ref({
   remember: false,
 })
 
-const isPasswordVisible = ref(false)
+const isPasswordVisible = ref(false);
 </script>
 
 <template>
@@ -29,6 +32,13 @@ const isPasswordVisible = ref(false)
       </h1>
     </div>
   </a>
+  <div v-if="$can('create', 'Post')">
+    <button >Create Post</button>
+  </div>
+  <!-- If user doesn't have permission -->
+  <div v-else>
+    You don't have permission to create a post.
+  </div>
 
   <VRow
     no-gutters
@@ -62,7 +72,7 @@ const isPasswordVisible = ref(false)
       >
         <VCardText>
           <h4 class="text-h4 mb-1">
-            Welcome to
+            Welcome to 
             <span class="text-capitalize">{{ themeConfig.app.title }}</span>! 👋🏻
           </h4>
           <p class="mb-0">
@@ -70,7 +80,7 @@ const isPasswordVisible = ref(false)
           </p>
         </VCardText>
         <VCardText>
-          <VForm @submit.prevent="() => {}">
+          <VForm @submit.prevent="authStore.handleLogin(form.email, form.password)">
             <VRow>
               <!-- email -->
               <VCol cols="12">
@@ -124,7 +134,7 @@ const isPasswordVisible = ref(false)
                 <span class="d-inline-block"> New on our platform? </span>
                 <a
                   class="text-primary ms-1 d-inline-block text-body-1"
-                  href="javascript:void(0)"
+                  href="/register"
                 >
                   Create an account
                 </a>

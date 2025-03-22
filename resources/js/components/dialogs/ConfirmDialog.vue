@@ -4,6 +4,14 @@ const props = defineProps({
     type: String,
     required: true,
   },
+  postDetails: {
+    type: Object,
+    required: false,
+    default: () => ({
+      title: '',
+      description: '',
+    }),
+  },
   isDialogVisible: {
     type: Boolean,
     required: true,
@@ -31,6 +39,8 @@ const emit = defineEmits([
   'confirm',
 ])
 
+const postDetails = ref({ ...toRaw(props.postDetails) })
+
 const unsubscribed = ref(false)
 const cancelled = ref(false)
 
@@ -39,7 +49,7 @@ const updateModelValue = val => {
 }
 
 const onConfirmation = () => {
-  emit('confirm', true)
+  emit('confirm', postDetails.value)
   updateModelValue(false)
   unsubscribed.value = true
 }
